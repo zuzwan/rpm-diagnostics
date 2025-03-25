@@ -46,14 +46,22 @@ Estimates whether the message invites new interpretations, reconstitution, or co
 
 ---
 
-Return the diagnostic in the following format:
+You must return the diagnostic in the following format. For each metric, include:
+
+1. The metric name as a bolded section header
+2. The italicized static definition as shown below
+3. The actual analysis or score/output
+
+Do not omit the definitions. They should always appear in the output to help users understand what is being measured.
+
+Return format:
 
 Message Summary:
 (1–3 sentence summary of the message content and structure)
 
 Epistemic Diagnosis:
 Definition: Evaluates how the message constructs and asserts knowledge.
-(Short paragraph)
+(Short paragraph analysis here)
 
 Stability Score (0–100):
 Definition: Measures how robust the message is against misfires or misinterpretation.
