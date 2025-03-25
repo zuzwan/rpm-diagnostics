@@ -1,30 +1,53 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>RPM Message Diagnostics</title>
 </head>
 <body>
   <h1>RPM Message Diagnostics</h1>
-  <textarea id="message" rows="10" cols="50" placeholder="Paste your message here..."></textarea><br>
+  <textarea id="message" rows="10" cols="60" placeholder="Paste your message here..."></textarea><br><br>
   <button id="analyzeBtn">Analyze</button>
 
-  <h2>Analysis Result:</h2>
+  <h2>Analysis:</h2>
   <pre id="result"></pre>
 
   <script>
-    document.getElementById("analyzeBtn").addEventListener("click", async () => {
-      const message = document.getElementById("message").value;
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("analyzeBtn");
+      const textarea = document.getElementById("message");
+      const result = document.getElementById("result");
 
-      const response = await fetch("/diagnose", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ message })
+      btn.addEventListener("click", async function () {
+        const message = textarea.value.trim();
+        if (!message) {
+          result.textContent = "Please enter a message.";
+          return;
+        }
+
+        result.textContent = "Analyzing...";
+
+        try {
+          const response = await fetch("/diagnose", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ message })
+          });
+
+          if (!response.ok) {
+            const error = await response.text();
+            result.textContent = "Error: " + error;
+            return;
+          }
+
+          const data = await response.json();
+          result.textContent = data.analysis;
+        } catch (err) {
+          result.textContent = "Error: " + err.message;
+        }
       });
-
-      const data = await response.json();
-      document.getElementById("result").textContent = data.analysis;
     });
   </script>
 </body>
