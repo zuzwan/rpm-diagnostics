@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify, send_from_directory
-import openai
+from openai import OpenAI
 import os
 
+# Initialize Flask and OpenAI
 app = Flask(__name__)
-openai.api_key = os.environ.get("OPENAI_API_KEY")
+client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
+# RPM system prompt
 RPM_SYSTEM_PROMPT = """You are a message diagnostics agent based on the Reality Processing Model (RPM).
 
 Your task is to analyze any message or piece of writing for the following:
@@ -36,16 +38,21 @@ Suggestions for Improvement:
 3. ...
 """
 
+# Serve the index.html
 @app.route("/")
 def index():
     return send_from_directory(".", "index.html")
 
+# Handle message analysis
 @app.route("/diagnose", methods=["POST"])
 def diagnose():
     data = request.get_json()
-    message = data.get("message")
+    if not data or "message" not in data:
+        return jsonify({"error": "No message provided"}), 400
 
-    response = openai.ChatCompletion.create(
+    message = data["message"]
+
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": RPM_SYSTEM_PROMPT},
@@ -53,10 +60,9 @@ def diagnose():
         ]
     )
 
-    return jsonify({"analysis": response.choices[0].message["content"]})
+    return jsonify({"analysis": response.choices[0].message.content})
 
-import os
-
+# Start the app on the correct port
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
