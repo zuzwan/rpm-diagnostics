@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>RPM Message Diagnostics</title>
+</head>
+<body>
+  <h1>Paste Your Message</h1>
+  <textarea id="message" rows="10" cols="60" placeholder="Paste message here..."></textarea><br><br>
+  <button onclick="diagnose()">Analyze</button>
+
+  <h2>Result:</h2>
+  <pre id="output">Waiting for input...</pre>
+
+  <script>
+    async function diagnose() {
+      const message = document.getElementById("message").value;
+
+      const res = await fetch("/diagnose", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      document.getElementById("output").textContent = data.analysis;
+    }
+  </script>
+</body>
+</html>
