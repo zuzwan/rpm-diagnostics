@@ -4,26 +4,28 @@
   <title>RPM Message Diagnostics</title>
 </head>
 <body>
-  <h1>Paste Your Message</h1>
-  <textarea id="message" rows="10" cols="60" placeholder="Paste message here..."></textarea><br><br>
-  <button onclick="diagnose()">Analyze</button>
+  <h1>RPM Message Diagnostics</h1>
+  <textarea id="message" rows="10" cols="50" placeholder="Paste your message here..."></textarea><br>
+  <button id="analyzeBtn">Analyze</button>
 
-  <h2>Result:</h2>
-  <pre id="output">Waiting for input...</pre>
+  <h2>Analysis Result:</h2>
+  <pre id="result"></pre>
 
   <script>
-    async function diagnose() {
+    document.getElementById("analyzeBtn").addEventListener("click", async () => {
       const message = document.getElementById("message").value;
 
-      const res = await fetch("/diagnose", {
+      const response = await fetch("/diagnose", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({ message })
       });
 
-      const data = await res.json();
-      document.getElementById("output").textContent = data.analysis;
-    }
+      const data = await response.json();
+      document.getElementById("result").textContent = data.analysis;
+    });
   </script>
 </body>
 </html>
