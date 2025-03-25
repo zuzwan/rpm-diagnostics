@@ -1,16 +1,111 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>RPM Message Diagnostics</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RPM Diagnostics</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: rgb(30, 30, 30);
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 900px;
+      margin-top: 5vh;
+    }
+
+    header {
+      width: 100%;
+      text-align: left;
+      margin-bottom: 50px;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2rem;
+    }
+
+    .input-section {
+      margin-top: 20vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      background-color: rgb(39, 39, 39);
+      border: 3px solid white;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 12px;
+      resize: vertical;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: white;
+      color: rgb(30, 30, 30);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+    }
+
+    .results {
+      margin-top: 50px;
+      white-space: pre-wrap;
+      width: 100%;
+    }
+
+    h3 {
+      margin-top: 30px;
+      font-size: 1.2rem;
+    }
+
+    i {
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        width: 95%;
+        margin-top: 2vh;
+      }
+
+      .input-section {
+        margin-top: 10vh;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>RPM Message Diagnostics</h1>
-  <textarea id="message" rows="10" cols="60" placeholder="Paste your message here..."></textarea><br><br>
-  <button id="analyzeBtn">Analyze</button>
+  <div class="container">
+    <header>
+      <h1>RPM Diagnostics</h1>
+    </header>
 
-  <h2>Analysis:</h2>
-  <pre id="result"></pre>
+    <div class="input-section">
+      <textarea id="message" placeholder="Paste your message here..."></textarea>
+      <button id="analyzeBtn">Analyze</button>
+    </div>
+
+    <div class="results" id="result"></div>
+  </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
@@ -21,11 +116,11 @@
       btn.addEventListener("click", async function () {
         const message = textarea.value.trim();
         if (!message) {
-          result.textContent = "Please enter a message.";
+          result.innerHTML = "<p>Please enter a message.</p>";
           return;
         }
 
-        result.textContent = "Analyzing...";
+        result.innerHTML = "<p>Analyzing...</p>";
 
         try {
           const response = await fetch("/diagnose", {
@@ -38,16 +133,29 @@
 
           if (!response.ok) {
             const error = await response.text();
-            result.textContent = "Error: " + error;
+            result.innerHTML = "<p>Error: " + error + "</p>";
             return;
           }
 
           const data = await response.json();
-          result.textContent = data.analysis;
+          result.innerHTML = formatAnalysis(data.analysis);
         } catch (err) {
-          result.textContent = "Error: " + err.message;
+          result.innerHTML = "<p>Error: " + err.message + "</p>";
         }
       });
+
+      function formatAnalysis(text) {
+        const lines = text.split("\n");
+        return lines.map(line => {
+          if (line.startsWith("Definition:")) {
+            return `<i>${line}</i>`;
+          } else if (line.match(/^(Epistemic Diagnosis|Stability Score|Capture Risk|Consensus Alignment|Level of Abstraction|Meaning Compression|Transformability Potential|Key Observations|Suggestions for Improvement):/)) {
+            return `<h3>${line}</h3>`;
+          } else {
+            return `<p>${line}</p>`;
+          }
+        }).join("");
+      }
     });
   </script>
 </body>
