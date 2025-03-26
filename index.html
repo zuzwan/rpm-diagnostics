@@ -107,16 +107,11 @@
       color: white;
       padding: 10px 14px;
       font-style: italic;
-    }
-
-    .analysis-score {
-      background-color: rgb(39, 39, 39);
-      color: white;
-      padding: 10px 14px;
+      border: 1px solid white;
     }
 
     .analysis-body {
-      background-color: rgb(39, 39, 39);
+      background-color: rgb(30, 30, 30);
       color: white;
       padding: 14px;
       border: 1px solid white;
@@ -229,27 +224,35 @@
           return line.match(/^Score:|^Risk Level:|^Level:/);
         }
 
-        function renderBody(bodyLines, sectionTitle) {
-          const content = bodyLines.join(" ");
-          if (content.includes("- ")) {
-            const bullets = content
+        function renderBody(bodyLines, score) {
+          const bodyText = bodyLines.join(" ");
+          let content = "";
+
+          if (score) {
+            content += `<p><strong>${score}</strong></p>`;
+          }
+
+          if (bodyText.includes("- ")) {
+            const bullets = bodyText
               .split("- ")
               .filter(item => item.trim())
               .map(item => `<li>${item.trim()}</li>`)
               .join("");
-            return `<ul>${bullets}</ul>`;
+            content += `<ul>${bullets}</ul>`;
+          } else {
+            content += `<p>${bodyText}</p>`;
           }
-          return `<p>${content}</p>`;
+
+          return content;
         }
 
         function renderSection(title, definition, score, body) {
-          let tabClass = title === "Message Summary" ? "message" : "";
-          let bodyClass = title === "Message Summary" ? "message" : "";
+          const tabClass = title === "Message Summary" ? "message" : "";
+          const bodyClass = title === "Message Summary" ? "message" : "";
           let block = `<div class='analysis-block'>`;
           block += `<div class='analysis-tab ${tabClass}'>${title}</div>`;
           if (definition) block += `<div class='analysis-definition'><i>${definition}</i></div>`;
-          if (score) block += `<div class='analysis-score'>${score}</div>`;
-          if (body.length > 0) block += `<div class='analysis-body ${bodyClass}'>${renderBody(body, title)}</div>`;
+          if (body.length > 0) block += `<div class='analysis-body ${bodyClass}'>${renderBody(body, score)}</div>`;
           block += `</div>`;
           return block;
         }
