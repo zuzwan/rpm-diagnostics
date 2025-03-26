@@ -7,8 +7,7 @@ app = Flask(__name__)
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
 # RPM system prompt
-RPM_SYSTEM_PROMPT = """
-The Reality Processing Model (RPM) is a conceptual framework for diagnosing how messages construct and assert meaning in the context of an evolving, infinite reality. It distinguishes between two fundamental approaches to meaning-making:
+RPM_SYSTEM_PROMPT = """The Reality Processing Model (RPM) is a conceptual framework for diagnosing how messages construct and assert meaning in the context of an evolving, infinite reality. It distinguishes between two fundamental approaches to meaning-making:
 
 1. **Consensus-based meaning** is finite, stabilized, and shared. It arises through collective agreement, institutional language, and socially reinforced patterns. It enables coordination and stability but can become rigid, resistant to new information, and vulnerable to stagnation.
 
@@ -26,31 +25,24 @@ Definitions:
 
 Epistemic Diagnosis:
 Evaluates how the message constructs and asserts knowledge — e.g., whether it relies on shared consensus, leaps of faith, ambiguity, or rigid structure.
-Go beyond tone. Evaluate the rhetorical strategies used to assert knowledge. Identify specific language or logic structures that reflect confidence, openness, ambiguity, or overreach. Quote or paraphrase key phrases. Compare to persuasive, exploratory, or declarative forms.
 
 Stability Score (0–100):
 Measures how robust the message is against misfires, misinterpretation, or destabilization. Lower scores suggest fragility; higher scores indicate resilient communication.
-Explain why the score was chosen. Identify phrases that contribute to clarity or confusion. Consider whether shifts in tone, structure, or form increase fragility. Assess whether the message is self-contained or context-dependent.
 
 Capture Risk:
 Estimates the likelihood that the message could be co-opted, misused, or weaponized by adversaries. High risk = high vulnerability to reinterpretation.
-Identify rhetorical elements that open the message to adversarial use—e.g., emotionally charged language, ambiguity, or lack of nuance. Consider political or ideological reframing. Justify the risk level.
 
 Consensus Alignment:
 Measures how closely the message aligns with prevailing consensus structures (norms, shared knowledge, institutional narratives). High alignment suggests reinforcement; low alignment may indicate subversion or novelty.
-Diagnose how the message positions itself relative to common discourses, ideologies, or cultural expectations. Reference whether it supports or destabilizes those structures.
 
 Level of Abstraction:
 Indicates whether the message makes a leap beyond established consensus, asserting trust in reality per se, embracing uncertainty or paradox. High abstraction may destabilize consensus while enabling transformation.
-Identify whether the message stays grounded in fact or enters symbolic, visionary, or mythic language. Assess whether abstraction clarifies, obscures, or transforms.
 
 Meaning Compression:
 Evaluates how much the message collapses complex, layered meaning into simplified, rigid forms. High compression suggests overcertainty or dogma; low compression allows nuance but may reduce clarity.
-Look for overconfident claims, binary frames, or slogans. Identify where metaphor or layered meaning has been flattened—or where complexity is preserved.
 
 Transformability Potential:
 Estimates whether the message invites new interpretations, reconstitution, or conceptual growth over time. High potential suggests adaptability and longevity; low potential implies the message is static or closed.
-Explain how the message may shift in meaning over time, context, or audience. Identify openness to reframing, contradiction, or conceptual expansion.
 
 ---
 
@@ -118,7 +110,6 @@ Suggestions for Improvement:
     - Clarify the message’s core claim to reduce Capture Risk and improve Stability Score.
     - Reframe jargon-heavy sections using metaphor to increase Transformability Potential.
 """
-
 
 # Serve the index.html
 @app.route("/")
