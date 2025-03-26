@@ -90,11 +90,14 @@
     }
 
     .analysis-tab {
+      width: 35%;
       background-color: white;
       color: rgb(30, 30, 30);
       font-weight: bold;
       padding: 10px 14px;
       font-size: 1.1rem;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
     }
 
     .analysis-tab.message {
@@ -102,22 +105,27 @@
     }
 
     .analysis-definition {
-      background-color: rgb(39, 39, 39);
+      background-color: rgb(70, 70, 70);
       color: white;
       padding: 10px 14px;
       font-style: italic;
     }
 
     .analysis-score {
-      background-color: rgb(71, 71, 71);
+      background-color: rgb(39, 39, 39);
       color: white;
       padding: 10px 14px;
     }
 
     .analysis-body {
-      background-color: rgb(80, 80, 80);
+      background-color: rgb(39, 39, 39);
       color: white;
       padding: 14px;
+      border: 1px solid white;
+    }
+
+    .analysis-body.message {
+      background-color: rgb(30, 30, 30);
     }
 
     .analysis-body ul {
@@ -218,9 +226,9 @@
           return line.match(/^Score:|^Risk Level:|^Level:/);
         }
 
-        function renderBody(bodyLines) {
+        function renderBody(bodyLines, sectionTitle) {
           const content = bodyLines.join(" ");
-          if (content.trim().startsWith("- ")) {
+          if (content.includes("- ")) {
             const bullets = content
               .split("- ")
               .filter(item => item.trim())
@@ -233,11 +241,12 @@
 
         function renderSection(title, definition, score, body) {
           let tabClass = title === "Message Summary" ? "message" : "";
+          let bodyClass = title === "Message Summary" ? "message" : "";
           let block = `<div class='analysis-block'>`;
           block += `<div class='analysis-tab ${tabClass}'>${title}</div>`;
           if (definition) block += `<div class='analysis-definition'><i>${definition}</i></div>`;
           if (score) block += `<div class='analysis-score'>${score}</div>`;
-          if (body.length > 0) block += `<div class='analysis-body'>${renderBody(body)}</div>`;
+          if (body.length > 0) block += `<div class='analysis-body ${bodyClass}'>${renderBody(body, title)}</div>`;
           block += `</div>`;
           return block;
         }
