@@ -81,18 +81,36 @@
       white-space: normal;
     }
 
-    h3 {
-      margin-top: 30px;
-      font-size: 1.2rem;
+    /* Analysis tab styling */
+    .analysis-block {
+      width: 80%;
+      margin: 30px auto;
+      border-radius: 4px;
+      overflow: hidden;
+      font-size: 1rem;
     }
 
-    i {
-      display: block;
-      margin-bottom: 10px;
+    .analysis-tab {
+      background-color: white;
+      color: rgb(30, 30, 30);
+      font-weight: bold;
+      padding: 10px 14px;
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+      font-size: 1.1rem;
     }
 
-    ul {
-      padding-left: 1.5rem;
+    .analysis-definition {
+      background-color: rgb(30, 30, 30);
+      color: white;
+      padding: 10px 14px;
+      font-style: italic;
+    }
+
+    .analysis-body {
+      background-color: rgb(39, 39, 39);
+      color: white;
+      padding: 14px;
     }
 
     @media (max-width: 600px) {
@@ -106,6 +124,10 @@
       }
 
       textarea {
+        width: 100%;
+      }
+
+      .analysis-block {
         width: 100%;
       }
 
@@ -128,7 +150,7 @@
       <button id="analyzeBtn">Analyze</button>
     </div>
 
-    <div class="results content-width" id="result"></div>
+    <div class="results" id="result"></div>
   </div>
 
   <script>
@@ -171,38 +193,42 @@
       function formatAnalysis(text) {
         const lines = text.split("\n");
         let output = "";
-        let inList = false;
+        let currentSection = null;
+        let currentDefinition = null;
+        let currentBody = [];
+
+        function renderSection(title, definition, body) {
+          let block = `<div class="analysis-block">`;
+          block += `<div class="analysis-tab">${title}</div>`;
+          if (definition) {
+            block += `<div class="analysis-definition"><i>${definition}</i></div>`;
+          }
+          if (body.length > 0) {
+            block += `<div class="analysis-body">${body.join(" ")}</div>`;
+          }
+          block += `</div>`;
+          return block;
+        }
 
         lines.forEach(line => {
-          if (line.startsWith("Definition:")) {
-            output += `<i>${line}</i>`;
-          } else if (line.match(/^(Epistemic Diagnosis|Stability Score|Capture Risk|Consensus Alignment|Level of Abstraction|Meaning Compression|Transformability Potential|Key Observations|Suggestions for Improvement):/)) {
-            if (inList) {
-              output += "</ul>";
-              inList = false;
+          if (line.match(/^(Message Summary|Epistemic Diagnosis|Stability Score|Capture Risk|Consensus Alignment|Level of Abstraction|Meaning Compression|Transformability Potential|Key Observations|Suggestions for Improvement):/)) {
+            if (currentSection) {
+              output += renderSection(currentSection, currentDefinition, currentBody);
             }
-            output += `<h3>${line}</h3>`;
-          } else if (line.startsWith("- ")) {
-            if (!inList) {
-              output += "<ul>";
-              inList = true;
-            }
-            output += `<li>${line.slice(2)}</li>`;
-          } else if (line.trim() === "") {
-            if (inList) {
-              output += "</ul>";
-              inList = false;
-            }
-          } else {
-            if (inList) {
-              output += "</ul>";
-              inList = false;
-            }
-            output += `<p>${line}</p>`;
+            currentSection = line.replace(":", "");
+            currentDefinition = null;
+            currentBody = [];
+          } else if (line.startsWith("Definition:")) {
+            currentDefinition = line;
+          } else if (line.trim() !== "") {
+            currentBody.push(line);
           }
         });
 
-        if (inList) output += "</ul>";
+        if (currentSection) {
+          output += renderSection(currentSection, currentDefinition, currentBody);
+        }
+
         return output;
       }
     });
