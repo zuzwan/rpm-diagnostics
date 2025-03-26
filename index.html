@@ -81,7 +81,6 @@
       white-space: normal;
     }
 
-    /* Analysis tab styling */
     .analysis-block {
       width: 80%;
       margin: 30px auto;
@@ -95,22 +94,39 @@
       color: rgb(30, 30, 30);
       font-weight: bold;
       padding: 10px 14px;
-      border-top-left-radius: 8px;
-      border-top-right-radius: 8px;
       font-size: 1.1rem;
     }
 
+    .analysis-tab.message {
+      color: rgb(39, 39, 39);
+    }
+
     .analysis-definition {
-      background-color: rgb(30, 30, 30);
+      background-color: rgb(39, 39, 39);
       color: white;
       padding: 10px 14px;
       font-style: italic;
     }
 
+    .analysis-score {
+      background-color: rgb(71, 71, 71);
+      color: white;
+      padding: 10px 14px;
+    }
+
     .analysis-body {
-      background-color: rgb(39, 39, 39);
+      background-color: rgb(80, 80, 80);
       color: white;
       padding: 14px;
+    }
+
+    .analysis-body ul {
+      padding-left: 1.5rem;
+      margin: 0;
+    }
+
+    .analysis-body li {
+      margin-bottom: 6px;
     }
 
     @media (max-width: 600px) {
@@ -195,17 +211,33 @@
         let output = "";
         let currentSection = null;
         let currentDefinition = null;
+        let currentScore = null;
         let currentBody = [];
 
-        function renderSection(title, definition, body) {
-          let block = `<div class="analysis-block">`;
-          block += `<div class="analysis-tab">${title}</div>`;
-          if (definition) {
-            block += `<div class="analysis-definition"><i>${definition}</i></div>`;
+        function isScoreLine(line) {
+          return line.match(/^Score:|^Risk Level:|^Level:/);
+        }
+
+        function renderBody(bodyLines) {
+          const content = bodyLines.join(" ");
+          if (content.trim().startsWith("- ")) {
+            const bullets = content
+              .split("- ")
+              .filter(item => item.trim())
+              .map(item => `<li>${item.trim()}</li>`) 
+              .join("");
+            return `<ul>${bullets}</ul>`;
           }
-          if (body.length > 0) {
-            block += `<div class="analysis-body">${body.join(" ")}</div>`;
-          }
+          return `<p>${content}</p>`;
+        }
+
+        function renderSection(title, definition, score, body) {
+          let tabClass = title === "Message Summary" ? "message" : "";
+          let block = `<div class='analysis-block'>`;
+          block += `<div class='analysis-tab ${tabClass}'>${title}</div>`;
+          if (definition) block += `<div class='analysis-definition'><i>${definition}</i></div>`;
+          if (score) block += `<div class='analysis-score'>${score}</div>`;
+          if (body.length > 0) block += `<div class='analysis-body'>${renderBody(body)}</div>`;
           block += `</div>`;
           return block;
         }
@@ -213,20 +245,23 @@
         lines.forEach(line => {
           if (line.match(/^(Message Summary|Epistemic Diagnosis|Stability Score|Capture Risk|Consensus Alignment|Level of Abstraction|Meaning Compression|Transformability Potential|Key Observations|Suggestions for Improvement):/)) {
             if (currentSection) {
-              output += renderSection(currentSection, currentDefinition, currentBody);
+              output += renderSection(currentSection, currentDefinition, currentScore, currentBody);
             }
             currentSection = line.replace(":", "");
             currentDefinition = null;
+            currentScore = null;
             currentBody = [];
           } else if (line.startsWith("Definition:")) {
             currentDefinition = line;
+          } else if (isScoreLine(line)) {
+            currentScore = line;
           } else if (line.trim() !== "") {
             currentBody.push(line);
           }
         });
 
         if (currentSection) {
-          output += renderSection(currentSection, currentDefinition, currentBody);
+          output += renderSection(currentSection, currentDefinition, currentScore, currentBody);
         }
 
         return output;
