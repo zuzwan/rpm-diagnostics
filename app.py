@@ -48,9 +48,9 @@ Estimates whether the message invites new interpretations, reconstitution, or co
 
 You must return the diagnostic in the following format. For each metric, include:
 
-1. The metric name as a bolded section header
-2. The italicized static definition as shown below
-3. The actual analysis or score/output
+1. The metric name as a section header  
+2. The static definition as shown below  
+3. A detailed interpretation of how this metric applies to the message — grounded in what the message actually does or communicates
 
 Do not omit the definitions. They should always appear in the output to help users understand what is being measured.
 
@@ -61,40 +61,54 @@ Message Summary:
 
 Epistemic Diagnosis:
 Definition: Evaluates how the message constructs and asserts knowledge.
-(Short paragraph analysis here)
+(Provide a short paragraph explaining how the message presents or frames knowledge — e.g., through shared consensus, empirical claims, abstract assertion, etc. Be specific about what parts of the message demonstrate this.)
 
 Stability Score (0–100):
 Definition: Measures how robust the message is against misfires or misinterpretation.
-Score: XX
+Score: XX  
+(Explain what aspects of the message contribute to its stability or fragility. Consider clarity, ambiguity, tone, structure, or rhetorical devices.)
 
 Capture Risk:
 Definition: Assesses how likely the message is to be co-opted or misused.
-Risk Level: Low / Medium / High
+Risk Level: Low / Medium / High  
+(Explain why this message is or isn’t vulnerable to adversarial reinterpretation. Reference phrasing, oversimplifications, or framing that may invite misreading.)
 
 Consensus Alignment:
 Definition: Measures alignment with dominant narratives or shared consensus frameworks.
-Level: High / Medium / Low
+Level: High / Medium / Low  
+(Clarify which dominant assumptions, institutions, or norms the message supports, challenges, or redefines. Be specific about how it positions itself relative to common discourse.)
 
 Level of Abstraction:
 Definition: Measures trust in meaning beyond empirical or shared logic.
-Level: High / Medium / Low
+Level: High / Medium / Low  
+(Explain whether the message stays grounded in facts, logic, and shared knowledge, or whether it takes a leap — invoking trust, moral authority, vision, or paradox.)
 
 Meaning Compression:
 Definition: Measures whether complexity is collapsed into overly rigid form.
-Level: High / Medium / Low
+Level: High / Medium / Low  
+(Identify where the message simplifies layered meaning into binary logic, slogans, or overly confident claims — or where it remains open to interpretation.)
 
 Transformability Potential:
 Definition: Assesses whether the message can evolve or grow in meaning over time.
-Level: High / Medium / Low
+Level: High / Medium / Low  
+(Describe how the message either invites reinterpretation, builds adaptive frameworks, or remains static and one-dimensional.)
 
 Key Observations:
-- Provide 2–4 short, bullet-point observations grounded in the text
+- Provide 2–4 bullet points using Markdown-style hyphens:
+  - Each item should be short, grounded in the message, and diagnostic in nature.
+  - Example:
+    - The message uses empirical statistics to establish authority.
+    - The tone implies moral obligation, increasing abstraction.
 
 Suggestions for Improvement:
-Provide three meaningful revisions or considerations. For each:
-- Describe the suggested improvement
-- Explain how it addresses specific weaknesses in the diagnostic above
-- Clarify which metrics it may positively affect and why
+- Provide three bullet points using Markdown-style hyphens.
+- Each item must:
+  - Propose a concrete revision or conceptual improvement.
+  - Identify which metric(s) it affects.
+  - Explain why the change would enhance diagnostic performance.
+  - Example:
+    - Clarify the message’s core claim to reduce Capture Risk and improve Stability Score.
+    - Reframe jargon-heavy sections using metaphor to increase Transformability Potential.
 """
 
 # Serve the index.html
