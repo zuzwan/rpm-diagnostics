@@ -23,15 +23,19 @@
       margin-top: 5vh;
     }
 
+    .content-width {
+      width: 80%;
+    }
+
     header {
       width: 100%;
-      text-align: left;
       margin-bottom: 50px;
     }
 
     header h1 {
       margin: 0;
       font-size: 2rem;
+      margin-left: 10%;
     }
 
     .input-section {
@@ -42,7 +46,6 @@
     }
 
     textarea {
-      width: 80%;
       height: 200px;
       background-color: rgb(39, 39, 39);
       border: 3px solid white;
@@ -75,8 +78,7 @@
 
     .results {
       margin-top: 50px;
-      white-space: pre-wrap;
-      width: 100%;
+      white-space: normal;
     }
 
     h3 {
@@ -89,6 +91,10 @@
       margin-bottom: 10px;
     }
 
+    ul {
+      padding-left: 1.5rem;
+    }
+
     @media (max-width: 600px) {
       .container {
         width: 95%;
@@ -99,8 +105,12 @@
         margin-top: 10vh;
       }
 
-      textarea {
+      .content-width {
         width: 100%;
+      }
+
+      header h1 {
+        margin-left: 0;
       }
     }
   </style>
@@ -112,11 +122,11 @@
     </header>
 
     <div class="input-section">
-      <textarea id="message" placeholder="Paste your message here..."></textarea>
+      <textarea id="message" class="content-width" placeholder="Paste your message here..."></textarea>
       <button id="analyzeBtn">Analyze</button>
     </div>
 
-    <div class="results" id="result"></div>
+    <div class="results content-width" id="result"></div>
   </div>
 
   <script>
@@ -158,15 +168,40 @@
 
       function formatAnalysis(text) {
         const lines = text.split("\n");
-        return lines.map(line => {
+        let output = "";
+        let inList = false;
+
+        lines.forEach(line => {
           if (line.startsWith("Definition:")) {
-            return `<i>${line}</i>`;
+            output += `<i>${line}</i>`;
           } else if (line.match(/^(Epistemic Diagnosis|Stability Score|Capture Risk|Consensus Alignment|Level of Abstraction|Meaning Compression|Transformability Potential|Key Observations|Suggestions for Improvement):/)) {
-            return `<h3>${line}</h3>`;
+            if (inList) {
+              output += "</ul>";
+              inList = false;
+            }
+            output += `<h3>${line}</h3>`;
+          } else if (line.startsWith("- ")) {
+            if (!inList) {
+              output += "<ul>";
+              inList = true;
+            }
+            output += `<li>${line.slice(2)}</li>`;
+          } else if (line.trim() === "") {
+            if (inList) {
+              output += "</ul>";
+              inList = false;
+            }
           } else {
-            return `<p>${line}</p>`;
+            if (inList) {
+              output += "</ul>";
+              inList = false;
+            }
+            output += `<p>${line}</p>`;
           }
-        }).join("");
+        });
+
+        if (inList) output += "</ul>";
+        return output;
       }
     });
   </script>
