@@ -25,17 +25,16 @@
 
     .content-width {
       width: 80%;
+      margin: 0 auto;
     }
 
     header {
-      width: 100%;
       margin-bottom: 50px;
     }
 
     header h1 {
       margin: 0;
       font-size: 2rem;
-      margin-left: 10%;
     }
 
     .input-section {
@@ -108,21 +107,19 @@
       .content-width {
         width: 100%;
       }
-
-      header h1 {
-        margin-left: 0;
-      }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1>rhizome.studio</h1>
-    </header>
+    <div class="content-width">
+      <header>
+        <h1>rhizome.studio</h1>
+      </header>
+    </div>
 
-    <div class="input-section">
-      <textarea id="message" class="content-width" placeholder="Paste your message here..."></textarea>
+    <div class="input-section content-width">
+      <textarea id="message" placeholder="Paste your message here..."></textarea>
       <button id="analyzeBtn">Analyze</button>
     </div>
 
