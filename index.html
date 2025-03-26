@@ -84,18 +84,16 @@
     .analysis-block {
       width: 80%;
       margin: 30px auto;
-      border-radius: 4px;
-      overflow: hidden;
       font-size: 1rem;
     }
 
     .analysis-tab {
-      width: 35%;
       background-color: white;
       color: rgb(30, 30, 30);
       font-weight: bold;
       padding: 10px 14px;
       font-size: 1.1rem;
+      width: 35%;
       border-top-left-radius: 8px;
       border-top-right-radius: 8px;
     }
@@ -157,6 +155,11 @@
 
       .content-width {
         width: 100%;
+      }
+
+      .analysis-tab {
+        width: 100%;
+        border-radius: 0;
       }
     }
   </style>
@@ -232,7 +235,7 @@
             const bullets = content
               .split("- ")
               .filter(item => item.trim())
-              .map(item => `<li>${item.trim()}</li>`) 
+              .map(item => `<li>${item.trim()}</li>`)
               .join("");
             return `<ul>${bullets}</ul>`;
           }
